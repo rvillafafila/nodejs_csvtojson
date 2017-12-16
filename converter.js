@@ -1,21 +1,26 @@
-const csvFileName = 'customer-data.xls'
-const jsonFileName = 'customer-data.json'
 const csv = require('csvtojson')
 const path = require('path')
 const fs = require('fs')
 
-var jsonFile = path.join(__dirname, jsonFileName)
+const jsonFile = path.join(__dirname, 'customer-data.json')
+const csvFile = path.join(__dirname, 'customer-data.csv')
 
-if(fs.statSync(jsonFile)){
-    fs.unlinkSync(jsonFile)
+const convertCSVToJSON = () => {
+
+    let json = []
+
+    csv()
+    .fromFile(csvFile)
+    .on('json', (jsonObj) => {
+        json.push(jsonObj)
+    })
+    .on('done', (error) => {
+        if (error) return console.log(error)
+        fs.writeFile(jsonFile, JSON.stringify(json, null, 2), 'utf-8', (error) => {
+            if (error) return console.log(error)
+            console.log('Conversion finished successfully')
+        })
+    })
 }
 
-csv()
-.fromFile(path.join(__dirname, csvFileName))
-.on('json', (jsonObj) => {
-    fs.appendFileSync(jsonFile, JSON.stringify(jsonObj))
-})
-.on('done', (error) => {
-    if (error) return console.log(error)
-    console.log('end')
-})
+convertCSVToJSON()

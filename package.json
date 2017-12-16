@@ -10,6 +10,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "csvtojson": "^1.1.9"
+    "csvtojson": "1.1.9"
   }
 }
